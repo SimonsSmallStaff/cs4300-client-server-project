@@ -1,8 +1,7 @@
 Data table:
 
 order {
-    user-id           // (seller)
-    seller-id
+    user-id     // seller
     item-name
     item-description
     price
