@@ -4,6 +4,6 @@ import connectMongoDB from "../../config/mongodb";
 export default function Home() {
   connectMongoDB();
   return (
-    <div><p>page</p></div>
+    <div><p>main page where stuff will go</p></div>
   );
 }
