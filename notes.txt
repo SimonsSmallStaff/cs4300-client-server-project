@@ -21,6 +21,7 @@ user {
     location
     profile-image
     date-joined
+    college      // for location based search 
 }
 
 mongodb

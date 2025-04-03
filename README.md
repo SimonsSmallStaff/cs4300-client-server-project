@@ -7,7 +7,7 @@ Fievet, Timothy
 Fuhriman, Braden
 
 Figma Link
-https://www.figma.com/design/XpRwXGkN9rFYjg6pKU7UIe/Untitled?node-id=0-1&t=50jgbPC7ryIIVXxd-1
+https://www.figma.com/design/I9AzPciqIanE0K9JyntPOf/Web-Project-Design?node-id=0-1&t=Ab62ZEUkFaZhJshI-1
 
 Possible API we could use
 https://collegescorecard.ed.gov/data/api/
