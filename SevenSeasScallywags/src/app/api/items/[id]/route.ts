@@ -3,21 +3,6 @@ import Item from "@/app/models/itemSchema";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import mongoose from "mongoose";
-/*
-export async function GET(request: NextRequest) {
-    // handle GET requests
-    await connectMongoDB();
-    const items = await Item.find();
-    return NextResponse.json({ items });
-}
-*/
-export async function POST(request: NextRequest) {
-    // handle POST requests
-    const { owner, title, description, url } = await request.json();
-    await connectMongoDB();
-    await Item.create({ owner, title, description, url });
-    return NextResponse.json({ message: "Item added successfully" }, { status: 201 });
-}
 
 interface RouteParams {
     params: { id: string};
