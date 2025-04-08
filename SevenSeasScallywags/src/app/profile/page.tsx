@@ -51,7 +51,7 @@ export default function Profile() {
 
     <div className="App">
         <h1>Search Colleges</h1>
-        <CollegeSearchDropdown apiKey="QR29qgsZRha4UVV0LciyIXXzXin6aYldRs6U33P4" />
+        <CollegeSearchDropdown apiKey="" />
     </div>
 
       {/* Split Layout: Form on left, Search/Items on right */}
