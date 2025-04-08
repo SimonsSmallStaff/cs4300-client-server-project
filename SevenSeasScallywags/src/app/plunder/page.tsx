@@ -1,74 +1,127 @@
 "use client";
-import React, { useState } from 'react';
+import { useState } from "react";
 
-// Example data for items (you can replace this with real data)
-const items = [
-  { id: 1, name: 'Item 1', description: 'Description of item 1', saved: true, housing: 'apartment', condition: 'new', status: 'available', category: 'furniture', distance: 5 },
-  { id: 2, name: 'Item 2', description: 'Description of item 2', saved: false, housing: 'house', condition: 'used', status: 'sold', category: 'electronics', distance: 10 },
-  { id: 3, name: 'Item 3', description: 'Description of item 3', saved: false, housing: 'condo', condition: 'refurbished', status: 'pending', category: 'appliances', distance: 20 },
-  { id: 4, name: 'Item 4', description: 'Description of item 4', saved: true, housing: 'townhouse', condition: 'new', status: 'available', category: 'furniture', distance: 50 },
-  { id: 5, name: 'Item 5', description: 'Description of item 5', saved: false, housing: 'apartment', condition: 'used', status: 'available', category: 'electronics', distance: 5 },
+//dummy interface
+interface Item {
+  id: number;
+  name: string;
+  image: string;
+  condition: string;
+  status: string;
+  location: string;
+  description: string;
+}
+
+// Dummy data for items
+const items: Item[] = [
+  {
+    id: 1,
+    name: 'Item 1',
+    image: 'https://via.placeholder.com/150',
+    condition: 'New',
+    status: 'Available',
+    location: 'New York',
+    description: 'A brand new item.',
+  },
+  {
+    id: 2,
+    name: 'Item 2',
+    image: 'https://via.placeholder.com/150',
+    condition: 'Used',
+    status: 'Sold',
+    location: 'Los Angeles',
+    description: 'Used item in good condition.',
+  },
+  {
+    id: 3,
+    name: 'Item 3',
+    image: 'https://via.placeholder.com/150',
+    condition: 'Refurbished',
+    status: 'Available',
+    location: 'Chicago',
+    description: 'Refurbished item, good as new.',
+  },
+  // More items can be added
 ];
 
-const YourComponent: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [savedItemsOnly, setSavedItemsOnly] = useState(false);
-  const [sortBy, setSortBy] = useState('');
-  const [housing, setHousing] = useState('');
-  const [condition, setCondition] = useState('');
-  const [status, setStatus] = useState('');
-  const [category, setCategory] = useState('');
-  const [distance, setDistance] = useState('');
 
-  // Filter items based on various criteria
-  const filteredItems = items
-    .filter((item) =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .filter((item) => (savedItemsOnly ? item.saved : true))
-    .filter((item) => (housing ? item.housing === housing : true))
-    .filter((item) => (condition ? item.condition === condition : true))
-    .filter((item) => (status ? item.status === status : true))
-    .filter((item) => (category ? item.category === category : true))
-    .filter((item) => (distance ? item.distance <= parseInt(distance) : true))
-    .sort((a, b) => {
-      if (sortBy === 'name') {
-        return a.name.localeCompare(b.name);
-      }
-      return 0;
-    });
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+export default function Plunder() {
+
+  let user = {
+    id: '#123456778',
+    name: 'bob',
+    join_date: '12/12/2025',
+    college: 'UGA',
+    savedItems: [items[0], items[1], items[2]]
   };
+  
+  // Dummy state hooks for filters
+const [housing, setHousing] = useState("");
+const [condition, setCondition] = useState("");
+const [status, setStatus] = useState("");
+const [category, setCategory] = useState("");
+const [distance, setDistance] = useState("");
+const [searchTerm, setSearchTerm] = useState("");
+const [sortBy, setSortBy] = useState("");
+const [savedItemsOnly, setSavedItemsOnly] = useState(false);
 
-  const handleSavedItemsChange = () => {
-    setSavedItemsOnly(!savedItemsOnly);
-  };
+// Dummy handlers
+const handleFilterChange = (
+  e: React.ChangeEvent<HTMLSelectElement>,
+  setter: React.Dispatch<React.SetStateAction<string>>
+) => {
+  setter(e.target.value);
+};
 
-  const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortBy(e.target.value);
-  };
+const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setSearchTerm(e.target.value);
+};
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>, setState: React.Dispatch<React.SetStateAction<string>>) => {
-    setState(e.target.value);
+const handleSavedItemsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setSavedItemsOnly(e.target.checked);
+};
+
+const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  setSortBy(e.target.value);
+};
+  
+  const [rerenderFlag, setRerenderFlag] = useState(false);
+  
+  const handleSaveItem = (itemId: number) => {
+    const itemToToggle = items.find((item) => item.id === itemId);
+  
+    if (!itemToToggle) return;
+  
+    const alreadySaved = user.savedItems.some((item) => item.id === itemId);
+  
+    if (alreadySaved) {
+      // Remove item
+      user.savedItems = user.savedItems.filter((item) => item.id !== itemId);
+    } else {
+      // Add item
+      user.savedItems.push(itemToToggle);
+    }
+  
+    // Force re-render if needed
+    setRerenderFlag((prev) => !prev);
   };
 
   return (
     <section className="m-[5%]">
       <div className="flex">
         {/* Filters Bar (Left Side) */}
-        <div className="w-[10%] min-w-[150px] bg-gray-100 p-4 h-screen text-black">
+        <div className="w-[10%] min-w-[150px] p-4 h-screen text-white" style={{ backgroundColor: '#3c2222' }}>
           <h3 className="font-medium">Filters</h3>
           {/* Housing Dropdown */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Housing</label>
+            <label className="block text-sm font-medium">Housing</label>
             <select
               value={housing}
               onChange={(e) => handleFilterChange(e, setHousing)}
-              className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500  bg-white text-black"
             >
-              <option value="">Housing</option>
+              <option value="" disabled hidden>Housing</option>
               <option value="dorm">Dorm</option>
               <option value="house">House</option>
               <option value="apartment">Apartment</option>
@@ -78,13 +131,13 @@ const YourComponent: React.FC = () => {
 
           {/* Condition Dropdown */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Condition</label>
+            <label className="block text-sm font-medium">Condition</label>
             <select
               value={condition}
               onChange={(e) => handleFilterChange(e, setCondition)}
-              className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500  bg-white text-black"
             >
-              <option value="">Condition</option>
+              <option value="" disabled hidden>Condition</option>
               <option value="new">New</option>
               <option value="used-good">Used-good</option>
               <option value="used-fair">used-fair</option>
@@ -93,13 +146,13 @@ const YourComponent: React.FC = () => {
 
           {/* Status Dropdown */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Status</label>
+            <label className="block text-sm font-medium">Status</label>
             <select
               value={status}
               onChange={(e) => handleFilterChange(e, setStatus)}
-              className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
             >
-              <option value="">Status</option>
+              <option value="" disabled hidden>Status</option>
               <option value="available">Available</option>
               <option value="sold">Sold</option>
               <option value="pending">Pending</option>
@@ -108,14 +161,13 @@ const YourComponent: React.FC = () => {
 
           {/* Category Dropdown */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Category</label>
+            <label className="block text-sm font-medium">Category</label>
             <select
               value={category}
               onChange={(e) => handleFilterChange(e, setCategory)}
-              className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
             >
-                <option value="">Category</option>
-                <option value="">Select Category</option>
+                <option value="" disabled hidden>category</option>
                 <option value="furniture">Furniture</option>
                 <option value="book">Books</option>
                 <option value="kitchen">Kitchen</option>
@@ -127,19 +179,35 @@ const YourComponent: React.FC = () => {
 
           {/* Distance Dropdown */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Distance</label>
+            <label className="block text-sm font-medium">Distance</label>
             <select
               value={distance}
               onChange={(e) => handleFilterChange(e, setDistance)}
-              className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
             >
-              <option value="">Distance</option>
+              <option value="" disabled hidden>Distance</option>
               <option value="5">5 miles</option>
               <option value="10">10 miles</option>
               <option value="20">20 miles</option>
               <option value="50">50 miles</option>
             </select>
           </div>
+
+          <button
+            onClick={() => {
+            setHousing("");
+            setCondition("");
+            setStatus("");
+            setCategory("");
+            setDistance("");
+            setSearchTerm("");
+            setSortBy("");
+            setSavedItemsOnly(false);
+            }}
+            className="w-full p-2 mt-4 text-white bg-red-500 rounded-lg hover:bg-red-600"
+            >
+            Reset Filters
+          </button>
         </div>
 
         {/* Main Content */}
@@ -173,31 +241,49 @@ const YourComponent: React.FC = () => {
                 id="sortBy"
                 value={sortBy}
                 onChange={handleSortByChange}
-                className="p-2 border rounded"
+                className="p-2 border rounded text-black bg-white"
               >
-                <option value="">Select</option>
+                <option value="" hidden>Select</option>
                 <option value="name">Name</option>
+                <option value="location">Location</option>
+                <option value="category">Category</option>
               </select>
             </div>
           </div>
 
           {/* Display Items */}
           <div>
-            {filteredItems.length > 0 ? (
-              filteredItems.map((item) => (
-                <div key={item.id} className="p-4 mb-4 border rounded-lg bg-amber-300 text-black">
-                  <h4 className="font-semibold">{item.name}</h4>
-                  <p>{item.description}</p>
+            {items.length > 0 ? (
+              items.map((item, index) => (
+              <div key={index} className="flex items-center bg-white p-4 mb-4 rounded-lg shadow-lg">
+                  {/* Left Side (Image and Title) */}
+                  <div className="flex-shrink-0 w-1/5 mr-4">
+                    <img src={item.image} alt={item.name} className="w-full h-auto rounded-lg" />
+                    <h3 className="mt-2 text-lg font-semibold">{item.name}</h3>
+                  </div>
+
+        {/* Middle Section (Condition, Status, Location) */}
+        <div className="flex-1 text-center">
+          <p className="text-sm font-medium text-gray-700">
+            <span className="mr-2">Condition: {item.condition}</span>
+            <span className="mr-2">Status: {item.status}</span>
+            <span className="mr-2">Location: {item.location}</span>
+          </p>
+        </div>
+
+        {/* Right Side (Description and Plus Button) */}
+        <div className="flex items-center justify-between w-1/4 ml-4">
+          <p className="text-sm text-gray-700 flex-1">{item.description}</p>
+          <button
+            className={`hover:text-green-700 ${user.savedItems.some((userItem) => userItem.id === item.id)? "text-green-500" : "text-red-500"}`} onClick={() => handleSaveItem(item.id)}>
+                    <i className={user.savedItems.some((userItem) => userItem.id === item.id) ? "fas fa-plus" : "fas fa-minus"}></i>
+                  </button>
                 </div>
-              ))
-            ) : (
-              <p>No items found.</p>
-            )}
+              </div>
+              ))) : (<p>No items found.</p>)}
           </div>
         </div>
       </div>
     </section>
-  );
-};
-
-export default YourComponent;
+);
+}

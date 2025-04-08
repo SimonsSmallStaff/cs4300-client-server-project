@@ -4,13 +4,16 @@ import { useState } from 'react';
 import connectMongoDB from "../../../config/mongodb";
 import CollegeSearchDropdown from "../../components/CollegeSearchDropdown.jsx";
 
-let user = {
-  id: '#123456778',
-  name: 'bob',
-  join_date: '12/12/2025',
-  college: 'UGA',
-  items: ['sword', 'chest', 'ship', 'dabloons']
-};
+interface Item {
+  id: number;
+  name: string;
+  image: string;
+  condition: string;
+  status: string;
+  location: string;
+  description: string;
+  saved: boolean;
+}
 
 export default function Profile() {
   connectMongoDB();
@@ -32,12 +35,46 @@ export default function Profile() {
       [name]: files ? files[0] : value,
     }));
   };
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredItems, setFilteredItems] = useState([
+    {
+      id: 1,
+      name: "Comfy Chair",
+      image: "https://via.placeholder.com/100",
+      condition: "used-good",
+      status: "available",
+      location: "Dorm A",
+      description: "Still in great shape!",
+      saved: false,
+    },
+    {
+      id: 2,
+      name: "Textbook",
+      image: "https://via.placeholder.com/100",
+      condition: "new",
+      status: "available",
+      location: "Library",
+      description: "Barely used. Required for CS101.",
+      saved: true,
+    },
+  ]);
+  
+  // Dummy save handler
+  const handleSaveItem = (id:number) => {
+    setFilteredItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, saved: !item.saved } : item
+      )
+    );
+  };
 
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const filteredItems = user.items.filter(item =>
-    item.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  let user = {
+    id: '#123456778',
+    name: 'bob',
+    join_date: '12/12/2025',
+    college: 'UGA',
+    items: [filteredItems[0], filteredItems[1], filteredItems[2]]
+  };
 
   return (
     <section className="p-4">
@@ -49,16 +86,16 @@ export default function Profile() {
         <p>User College: {user.college}</p>
       </div>
 
-    <div className="App">
+    <div className="App text-center p-4">
         <h1>Search Colleges</h1>
-        <CollegeSearchDropdown apiKey="" />
+        <CollegeSearchDropdown apiKey="QR29qgsZRha4UVV0LciyIXXzXin6aYldRs6U33P4" />
     </div>
 
       {/* Split Layout: Form on left, Search/Items on right */}
       <div className="flex flex-col md:flex-row gap-8 justify-center mt-10">
         
         {/* Form */}
-        <div className="form md:w-3/4">
+        <div className="form md-w-md">
           <form className="bg-white shadow-md rounded-xl p-6 space-y-4 text-black">
             <h2 className="text-2xl font-bold text-center mb-4">List an Item</h2>
 
@@ -163,26 +200,51 @@ export default function Profile() {
         </div>
 
         {/* Search & Items */}
-        <div className="md:w-3/4 flex flex-col items-center">
+        <div className="md-w-xl flex flex-col items-center">
           <input
             type="text"
             placeholder="Search items..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full max-w-md px-4 py-2 border border-gray-300 bg-lime-300 opacity-50 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-white text-black mb-6"
+            className="w-full px-4 py-2 border border-gray-300 bg-lime-300 opacity-50 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-white text-black mb-6"
           />
 
-          <div className="userItems w-full max-w-md text-center bg-white rounded-lg p-4">
-            {filteredItems.length > 0 ? (
-              filteredItems.map((item, index) => (
-                <p key={index} className="text-gray-700 py-1">
-                  {item}
-                </p>
-              ))
-            ) : (
-              <p className="text-gray-400 italic">No matching items found.</p>
-            )}
-          </div>
+<div className="userItems w-full max-w-xl text-center bg-white rounded-lg p-2">
+  {filteredItems.length > 0 ? (
+    filteredItems.map((item, index) => (
+      <div key={index} className="flex items-center bg-white p-4 mb-4 rounded-lg shadow-lg">
+        {/* Left Side (Image and Title) */}
+        <div className="flex-shrink-0 w-1/5 mr-4">
+          <img src={item.image} alt={item.name} className="w-full h-auto rounded-lg" />
+          <h3 className="mt-2 text-lg font-semibold">{item.name}</h3>
+        </div>
+
+        {/* Middle Section (Condition, Status, Location) */}
+        <div className="flex-1 text-center">
+          <p className="text-sm font-medium text-gray-700">
+            <span className="mr-2">Condition: {item.condition}</span>
+            <span className="mr-2">Status: {item.status}</span>
+            <span className="mr-2">Location: {item.location}</span>
+          </p>
+        </div>
+
+        {/* Right Side (Description and Plus Button) */}
+        <div className="flex items-center justify-between w-1/4 ml-4">
+          <p className="text-sm text-gray-700 flex-1">{item.description}</p>
+          <button
+            className={`hover:text-green-700 ${item.saved ? "text-red-500":"text-green-500"}`} // Conditional colors
+            onClick={() => handleSaveItem(item.id)}
+          >
+            <i className={item.saved ? "fas fa-minus" : "fas fa-plus"}></i> {/* Conditional icon */}
+          </button>
+        </div>
+      </div>
+    ))
+  ) : (
+    <p className="text-gray-400 italic">No matching items found.</p>
+  )}
+</div>
+
         </div>
       </div>
     </section>
