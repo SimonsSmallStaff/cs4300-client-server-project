@@ -39,6 +39,11 @@ export default function RootLayout({
             </a>
           </div>
           <div className="flex items-center gap-4">
+          {isLoggedIn && (
+              <a href="/plunder" className="text-white text-2xl">
+                <p>Stash</p>
+              </a>
+            )}
             {isLoggedIn && (
               <a href="/profile" className="text-gray-600 hover:text-gray-800 text-2xl">
                 <i className="fas fa-user-circle text-white"></i>

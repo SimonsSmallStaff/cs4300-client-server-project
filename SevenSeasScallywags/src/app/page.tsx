@@ -4,7 +4,7 @@ let user = {
   profile: "davey Jones"
 };
 
-export default function Home( { children }: { children: React.ReactNode }) {
+export default function Home() {
   connectMongoDB();
   return (
       <div className="flex items-center justify-center min-h-screen text-4xl">
