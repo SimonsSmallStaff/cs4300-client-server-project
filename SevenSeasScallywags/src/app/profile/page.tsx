@@ -92,6 +92,7 @@ export default function Profile() {
   
     setFormData({
       name: '',
+      category: '',
       condition: '',
       status: '',
       pickup: '',
