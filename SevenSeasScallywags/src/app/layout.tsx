@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -30,7 +31,7 @@ export default function RootLayout({
       </head>
     <body
         style={{ backgroundImage: "url('/images/background.jpg')" }}>
-        <nav style={{ backgroundColor: '#3c2222' }} className="w-full flex items-center justify-between px-6 py-4 bg-white shadow-md">
+        <nav style={{ backgroundColor: '#3c2222' }} className="w-full flex items-center justify-between px-6 py-4 bg-white shadow-md pirata">
           <div>
             <a href="/">
               <p className="text-4xl text-white">Scallywags Stash</p>
@@ -48,11 +49,10 @@ export default function RootLayout({
               </a>
             )}
             <div className="bg-black p-2 rounded-lg">
-              <a
-                href={isLoggedIn ? "/" : "/login"}
-                className="text-sm font-medium text-white hover:underline"
-              >
-                {isLoggedIn ? "Logout" : "Login"}
+              <a href="/login">
+                <button>
+                  {isLoggedIn ? "Logout" : "Login"}
+                </button>
               </a>
             </div>
           </div>

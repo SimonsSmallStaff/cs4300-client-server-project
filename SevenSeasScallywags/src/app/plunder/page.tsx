@@ -10,53 +10,44 @@ interface Item {
   status: string;
   location: string;
   description: string;
+  saved: boolean;
 }
-
-// Dummy data for items
-const items: Item[] = [
-  {
-    id: 1,
-    name: 'Item 1',
-    image: 'https://via.placeholder.com/150',
-    condition: 'New',
-    status: 'Available',
-    location: 'New York',
-    description: 'A brand new item.',
-  },
-  {
-    id: 2,
-    name: 'Item 2',
-    image: 'https://via.placeholder.com/150',
-    condition: 'Used',
-    status: 'Sold',
-    location: 'Los Angeles',
-    description: 'Used item in good condition.',
-  },
-  {
-    id: 3,
-    name: 'Item 3',
-    image: 'https://via.placeholder.com/150',
-    condition: 'Refurbished',
-    status: 'Available',
-    location: 'Chicago',
-    description: 'Refurbished item, good as new.',
-  },
-  // More items can be added
-];
-
-
-
+  
 export default function Plunder() {
 
-  let user = {
-    id: '#123456778',
-    name: 'bob',
-    join_date: '12/12/2025',
-    college: 'UGA',
-    savedItems: [items[0], items[1], items[2]]
-  };
-  
-  // Dummy state hooks for filters
+  const [filteredItems, setFilteredItems] = useState([
+    {
+      id: 1,
+      name: "Comfy Chair",
+      image: "https://via.placeholder.com/100",
+      condition: "used-good",
+      status: "available",
+      location: "Dorm A",
+      description: "Still in great shape!",
+      saved: true,
+    },
+    {
+      id: 2,
+      name: "Textbook",
+      image: "https://via.placeholder.com/100",
+      condition: "new",
+      status: "available",
+      location: "Library",
+      description: "Barely used. Required for CS101.",
+      saved: true,
+    },
+    {
+      id: 3,
+      name: "Calculator",
+      image: "https://via.placeholder.com/100",
+      condition: "new",
+      status: "available",
+      location: "Student center",
+      description: "New, good for calculus 2",
+      saved: true,
+    },
+  ]);
+// Dummy state hooks for filters
 const [housing, setHousing] = useState("");
 const [condition, setCondition] = useState("");
 const [status, setStatus] = useState("");
@@ -65,14 +56,6 @@ const [distance, setDistance] = useState("");
 const [searchTerm, setSearchTerm] = useState("");
 const [sortBy, setSortBy] = useState("");
 const [savedItemsOnly, setSavedItemsOnly] = useState(false);
-
-// Dummy handlers
-const handleFilterChange = (
-  e: React.ChangeEvent<HTMLSelectElement>,
-  setter: React.Dispatch<React.SetStateAction<string>>
-) => {
-  setter(e.target.value);
-};
 
 const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   setSearchTerm(e.target.value);
@@ -85,35 +68,35 @@ const handleSavedItemsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   setSortBy(e.target.value);
 };
-  
-  const [rerenderFlag, setRerenderFlag] = useState(false);
-  
-  const handleSaveItem = (itemId: number) => {
-    const itemToToggle = items.find((item) => item.id === itemId);
-  
-    if (!itemToToggle) return;
-  
-    const alreadySaved = user.savedItems.some((item) => item.id === itemId);
-  
-    if (alreadySaved) {
-      // Remove item
-      user.savedItems = user.savedItems.filter((item) => item.id !== itemId);
-    } else {
-      // Add item
-      user.savedItems.push(itemToToggle);
-    }
-  
-    // Force re-render if needed
-    setRerenderFlag((prev) => !prev);
+
+let user = {
+  id: '#123456778',
+  name: 'bob',
+  join_date: '12/12/2025',
+  college: 'UGA',
+  savedItems: [filteredItems[0], filteredItems[1], filteredItems[2]]
+};
+  // Dummy save handler
+  const handleSaveItem = (id:number) => {
+    setFilteredItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, saved: !item.saved } : item
+      )
+    );
   };
+  // Dummy handlers
+const handleFilterChange = (
+  e: React.ChangeEvent<HTMLSelectElement>,
+  setter: React.Dispatch<React.SetStateAction<string>>
+) => {
+  setter(e.target.value);
+};
 
   return (
     <section className="m-[5%]">
       <div className="flex">
-        {/* Filters Bar (Left Side) */}
         <div className="w-[10%] min-w-[150px] p-4 h-screen text-white" style={{ backgroundColor: '#3c2222' }}>
           <h3 className="font-medium">Filters</h3>
-          {/* Housing Dropdown */}
           <div className="mb-4">
             <label className="block text-sm font-medium">Housing</label>
             <select
@@ -129,7 +112,6 @@ const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
             </select>
           </div>
 
-          {/* Condition Dropdown */}
           <div className="mb-4">
             <label className="block text-sm font-medium">Condition</label>
             <select
@@ -144,7 +126,6 @@ const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
             </select>
           </div>
 
-          {/* Status Dropdown */}
           <div className="mb-4">
             <label className="block text-sm font-medium">Status</label>
             <select
@@ -159,7 +140,6 @@ const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
             </select>
           </div>
 
-          {/* Category Dropdown */}
           <div className="mb-4">
             <label className="block text-sm font-medium">Category</label>
             <select
@@ -177,7 +157,6 @@ const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
             </select>
           </div>
 
-          {/* Distance Dropdown */}
           <div className="mb-4">
             <label className="block text-sm font-medium">Distance</label>
             <select
@@ -210,9 +189,7 @@ const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
           </button>
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 p-4">
-          {/* Search Bar */}
           <div className="flex mb-4 bg-white rounded-lg opacity-75 text-black">
             <input
               type="text"
@@ -223,7 +200,6 @@ const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
             />
           </div>
 
-          {/* Filters and Sort Section */}
           <div className="flex items-center justify-between mb-4 bg-amber-800 p-1 rounded-lg">
             <div className="flex items-center">
               <input
@@ -251,18 +227,15 @@ const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
             </div>
           </div>
 
-          {/* Display Items */}
           <div>
-            {items.length > 0 ? (
-              items.map((item, index) => (
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item, index) => (
               <div key={index} className="flex items-center bg-white p-4 mb-4 rounded-lg shadow-lg">
-                  {/* Left Side (Image and Title) */}
                   <div className="flex-shrink-0 w-1/5 mr-4">
                     <img src={item.image} alt={item.name} className="w-full h-auto rounded-lg" />
                     <h3 className="mt-2 text-lg font-semibold">{item.name}</h3>
                   </div>
 
-        {/* Middle Section (Condition, Status, Location) */}
         <div className="flex-1 text-center">
           <p className="text-sm font-medium text-gray-700">
             <span className="mr-2">Condition: {item.condition}</span>
@@ -271,13 +244,14 @@ const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
           </p>
         </div>
 
-        {/* Right Side (Description and Plus Button) */}
         <div className="flex items-center justify-between w-1/4 ml-4">
           <p className="text-sm text-gray-700 flex-1">{item.description}</p>
           <button
-            className={`hover:text-green-700 ${user.savedItems.some((userItem) => userItem.id === item.id)? "text-green-500" : "text-red-500"}`} onClick={() => handleSaveItem(item.id)}>
-                    <i className={user.savedItems.some((userItem) => userItem.id === item.id) ? "fas fa-plus" : "fas fa-minus"}></i>
-                  </button>
+            className={`hover:text-green-700 ${item.saved ? "text-red-500":"text-green-500"}`}
+            onClick={() => handleSaveItem(item.id)}
+          >
+            <i className={item.saved ? "fas fa-minus" : "fas fa-plus"}></i>
+          </button>
                 </div>
               </div>
               ))) : (<p>No items found.</p>)}
