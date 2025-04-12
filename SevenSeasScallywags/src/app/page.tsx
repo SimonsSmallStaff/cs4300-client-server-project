@@ -1,5 +1,6 @@
 import connectMongoDB from "../../config/mongodb";
 import React from "react";
+import styles from './page.module.css';
 
 let user = {
   profile: "davey Jones"
@@ -8,13 +9,13 @@ let user = {
 export default function Home() {
   connectMongoDB();
   return (
-    <div className="flex items-center justify-center min-h-screen text-4xl">
-      <div className="flex flex-col gap-6 p-6 w-[60%]">
+    <div 
+    className="flex items-center justify-center min-h-screen text-4xl">
+      <div
+      className="flex flex-col gap-6 p-6 w-[60%]">
         <div
-          style={{ backgroundColor: "#3c2222" }}
-          className="flex items-center justify-center p-6 text-white rounded pirata"
-        >
-          <p className="text-center">
+          className="flex items-center justify-center p-6 text-white rounded pirata">
+          <p className={styles.styleTest}>
             Scallywag Stash is your campus hideout for free school supplies.
             Trade and claim treasures like books, clothes, and furniture — all
             donated by fellow students. Log in to find what you need, no gold
