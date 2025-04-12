@@ -1,40 +1,41 @@
-import connectMongoDB from "../../../config/mongodb";
+import connectMongoDB from "../../config/mongodb";
+import React from "react";
+import styles from './page.module.css';
 
-export default function LoginPage() {
+let user = {
+  profile: "davey Jones"
+};
+
+export default function Home() {
   connectMongoDB();
   return (
-    <div className="flex flex-col items-center justify-center mt-[20%] text-white">
-      <div className="bg-[#3c2222] p-6 rounded-lg shadow-lg w-80">
-        <form>
-          <div className="mb-4">
-            <label className="block text-sm mb-1" htmlFor="username">
-            Username
-            </label>
-            <input
-              id="username"
-              type="text"
-              className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-            />
-          </div>
-          <div className="mb-6">
-          <label className="block text-sm mb-1" htmlFor="password">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-          />
+    <div 
+    className="flex items-center justify-center min-h-screen text-4xl">
+      <div
+      className="flex flex-col gap-6 p-6 w-[60%]">
+        <div
+          className="flex items-center justify-center p-6 text-white rounded pirata">
+          <p className={styles.styleTest}>
+            Scallywag Stash is your campus hideout for free school supplies.
+            Trade and claim treasures like books, clothes, and furniture — all
+            donated by fellow students. Log in to find what you need, no gold
+            doubloons required.
+          </p>
         </div>
-        <button
-          type="submit"
-          className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
-          >
-          Sign In
-        </button>
-      </form>
-    </div>
-  </div>
+        <div
+          style={{ backgroundColor: "#FFCC00" }}
+          className="flex flex-col items-center justify-center p-6 text-black rounded pirata"
+        >
+          <p>Plunder of the Week</p>
 
+          <img
+            src="/images/background.jpg"
+            alt="Item image"
+            className="w-[50px] h-[50px] mb-4"
+          />
+          <p className="text-center">{user.profile}</p>
+        </div>
+      </div>
+    </div>
   );
 }
