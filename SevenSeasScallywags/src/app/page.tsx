@@ -26,9 +26,9 @@ export default function Home() {
             />
           <div className={styles.contents}>
               <div
-              className="flex flex-col gap-6 p-6 w-[60%]">
+              className="gap-6 p-6">
               <div
-                className="flex items-center justify-center p-6 text-white rounded pirata">
+                className="p-6 text-black rounded pirata">
                 <p className={styles.styleTest}>
                   Scallywag Stash is your campus hideout for free school supplies.
                   Trade and claim treasures like books, clothes, and furniture — all
