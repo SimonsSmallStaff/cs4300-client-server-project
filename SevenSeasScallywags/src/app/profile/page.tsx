@@ -110,7 +110,7 @@ export default function Profile() {
 
   return (
     <section className="p-4">
-      <div className="profileInfo mx-auto text-center p-4 rounded-lg mt-4 w-[40%] bg-gray-300 text-black">
+      <div className="profileInfo mx-auto text-center p-4 rounded-lg mt-4 w-[40%] bg-gray-500 text-white">
         <p>User ID: {user.id}</p>
         <p>Username: {user.name}</p>
         <p>Date Joined: {user.join_date}</p>

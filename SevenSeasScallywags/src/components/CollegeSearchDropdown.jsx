@@ -61,7 +61,7 @@ const CollegeSearchDropdown = ({ apiKey }) => {
     />
     
     <button
-      onClick={() => console.log("Set button clicked")}
+      onClick={() => changeCollege()}
       className="px-4 py-2 bg-green-400 text-white focus:outline-none"
     >
       Set

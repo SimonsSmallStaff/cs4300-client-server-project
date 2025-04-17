@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import connectMongoDB from "../../../config/mongodb";
 
 //dummy interface
 interface Item {
@@ -14,7 +15,7 @@ interface Item {
 }
   
 export default function Plunder() {
-
+  connectMongoDB();
   const [filteredItems, setFilteredItems] = useState([
     {
       id: 1,
@@ -52,7 +53,6 @@ const [housing, setHousing] = useState("");
 const [condition, setCondition] = useState("");
 const [status, setStatus] = useState("");
 const [category, setCategory] = useState("");
-const [distance, setDistance] = useState("");
 const [searchTerm, setSearchTerm] = useState("");
 const [sortBy, setSortBy] = useState("");
 const [savedItemsOnly, setSavedItemsOnly] = useState(false);
@@ -91,7 +91,6 @@ const handleFilterChange = (
 ) => {
   setter(e.target.value);
 };
-
   return (
     <section className="m-[5%]">
       <div className="flex">
@@ -163,7 +162,6 @@ const handleFilterChange = (
             setCondition("");
             setStatus("");
             setCategory("");
-            setDistance("");
             setSearchTerm("");
             setSortBy("");
             setSavedItemsOnly(false);
