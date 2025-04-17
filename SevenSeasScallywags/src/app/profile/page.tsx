@@ -83,7 +83,7 @@ export default function Profile() {
     name: 'bob',
     join_date: '12/12/2025',
     college: 'UGA',
-    items: [filteredItems[0], filteredItems[1], filteredItems[2]]
+    items: [filteredItems[0], filteredItems[1], filteredItems[2]],
   };
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handleSubmit = (e: React.FormEvent) => {
@@ -99,8 +99,9 @@ export default function Profile() {
       location: '',
       description: '',
       image: null,
+      college: user.college,
     });
-  
+    
     // Clear file input manually
     if (fileInputRef.current) {
       fileInputRef.current.value = '';

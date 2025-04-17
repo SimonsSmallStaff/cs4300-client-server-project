@@ -157,21 +157,6 @@ const handleFilterChange = (
             </select>
           </div>
 
-          <div className="mb-4">
-            <label className="block text-sm font-medium">Distance</label>
-            <select
-              value={distance}
-              onChange={(e) => handleFilterChange(e, setDistance)}
-              className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
-            >
-              <option value="" disabled hidden>Distance</option>
-              <option value="5">5 miles</option>
-              <option value="10">10 miles</option>
-              <option value="20">20 miles</option>
-              <option value="50">50 miles</option>
-            </select>
-          </div>
-
           <button
             onClick={() => {
             setHousing("");
