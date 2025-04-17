@@ -1,0 +1,23 @@
+
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { hashPassword, generateToken, setTokenCookie } from './auth';
+import { createUser, findUserByEmail } from './user';
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') return res.status(405).end();
+
+  const { username, email, password } = req.body;
+
+  if (!email || !password || !username) return res.status(400).json({ message: 'Missing fields' });
+
+  const existing = await findUserByEmail(email);
+  if (existing) return res.status(409).json({ message: 'User already exists' });
+
+  const hashedPassword = await hashPassword(password);
+  const user = await createUser({ username, email, hashedPassword });
+
+  const token = generateToken({ email });
+  setTokenCookie(res, token);
+
+  res.status(201).json({ message: 'User created', user: { email, username } });
+}
