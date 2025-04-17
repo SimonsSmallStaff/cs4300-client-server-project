@@ -1,0 +1,48 @@
+.styleTest {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s ease-out forwards;
+  animation-delay: 0.5s;
+  text-align: center;
+  }
+
+  .container {
+    justify-content: center;
+  }
+
+  .bg {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  z-index: -1;
+  }
+
+  .contents {
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .imageSet {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;              
+    flex-wrap: nowrap;    
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fadeInImg {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+  
+  
+  
