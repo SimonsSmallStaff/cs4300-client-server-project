@@ -1,6 +1,11 @@
 
 import { MongoClient } from 'mongodb';
 
+// the no-no variable
+declare global {
+  var _mongoClientPromise: Promise<MongoClient> | undefined;
+}
+
 const uri = process.env.MONGODB_URI || 'mongodb://localhost:3000';
 const dbName = 'marketplace';
 let client: MongoClient;
