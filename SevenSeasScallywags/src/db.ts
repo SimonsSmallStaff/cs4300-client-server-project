@@ -6,7 +6,7 @@ declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-const uri = process.env.MONGODB_URI || 'mongodb://localhost:3000';
+const uri = process.env.MONGODB_URI;
 const dbName = 'marketplace';
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
