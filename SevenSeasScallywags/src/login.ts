@@ -10,10 +10,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!username || !password) return res.status(400).json({ message: 'Missing fields' });
 
   const user = await findUserByUsername(username);
-  if (!user) return res.status(401).json({ message: 'Invalid email or password' });
+  if (!user) return res.status(401).json({ message: 'Invalid user or password' });
 
   const isValid = await verifyPassword(password, user.hashedPassword);
-  if (!isValid) return res.status(401).json({ message: 'Invalid email or password' });
+  if (!isValid) return res.status(401).json({ message: 'Invalid user or password' });
 
   const token = generateToken({ username });
   setTokenCookie(res, token);
