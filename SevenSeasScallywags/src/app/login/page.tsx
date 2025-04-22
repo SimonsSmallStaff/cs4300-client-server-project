@@ -1,40 +1,49 @@
-import connectMongoDB from "../../../config/mongodb";
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+
+type FormData = {
+  username: string;
+  password: string;
+};
 
 export default function LoginPage() {
-  connectMongoDB();
-  return (
-    <div className="flex flex-col items-center justify-center mt-[20%] text-white">
-      <div className="bg-[#3c2222] p-6 rounded-lg shadow-lg w-80">
-        <form>
-          <div className="mb-4">
-            <label className="block text-sm mb-1" htmlFor="username">
-            Username
-            </label>
-            <input
-              id="username"
-              type="text"
-              className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-            />
-          </div>
-          <div className="mb-6">
-          <label className="block text-sm mb-1" htmlFor="password">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
-          >
-          Log In
-        </button>
-      </form>
-    </div>
-  </div>
+  const { register, handleSubmit } = useForm<FormData>();
+  const router = useRouter();
 
+  const onSubmit = async (data: FormData) => {
+    try {
+      const response = await fetch('/api/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+      
+	  if (response.ok) {
+        // Save token to localStorage
+        localStorage.setItem('token', result.token);
+        // Redirect to dashboard
+        //router.push('/dashboard');
+		router.push('/plunder');
+      } else {
+        alert(result.message || 'Authentication failed');
+      }
+    } catch (error) {
+      console.error('Login Error:', error);
+      alert('Something went wrong');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <input {...register('username')} placeholder="Username" className="border p-2" />
+      <input {...register('password')} type="password" placeholder="Password" className="border p-2" />
+      <button type="submit" className="bg-blue-500 text-white p-2">Login / Register</button>
+    </form>
   );
 }

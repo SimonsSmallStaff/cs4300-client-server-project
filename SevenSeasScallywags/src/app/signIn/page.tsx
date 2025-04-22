@@ -1,7 +1,7 @@
 import connectMongoDB from "../../../config/mongodb";
 
 export default function LoginPage() {
-  connectMongoDB();
+ // connectMongoDB();
   return (
     <div className="flex flex-col items-center justify-center mt-[20%] text-white">
       <div className="bg-[#3c2222] p-6 rounded-lg shadow-lg w-80">

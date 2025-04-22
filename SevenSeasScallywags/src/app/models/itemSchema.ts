@@ -1,27 +1,43 @@
-import mongoose, { Schema, Document, Model, mongo} from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
+
 interface IItem extends Document {
-    owner: number;
-    title: string;
-    description?: string;
-    url?: string;
+  name: string;
+  image?: string;
+  condition: string;
+  status: string;
+  location: string;
+  description: string;
+  saved?: boolean;
 }
 
 const itemSchema = new Schema<IItem>({
-    owner: {
-        type: Number,
-    },
-    title: {
-        type: String,
-        required: true,
-    },
-    description: {
-        type: String,
-    },
-    url: {
-        type: String,
-        required: false,
-    }
+  name: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+  },
+  condition: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+  },
+  location: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  saved: {
+    type: Boolean
+  }
 });
 
-const Item: Model<IItem> = mongoose.models.Item || mongoose.model<IItem>("Item", itemSchema);
+const Item: Model<IItem> = mongoose.models.IItem || mongoose.model<IItem>("IItem", itemSchema);
 export default Item;

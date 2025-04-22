@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
-import connectMongoDB from "../../../config/mongodb";
 
-//dummy interface
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
 interface Item {
-  id: number;
+  _id: string;
   name: string;
   image: string;
   condition: string;
@@ -15,82 +15,71 @@ interface Item {
 }
   
 export default function Plunder() {
-  connectMongoDB();
-  const [filteredItems, setFilteredItems] = useState([
-    {
-      id: 1,
-      name: "Comfy Chair",
-      image: "https://via.placeholder.com/100",
-      condition: "used-good",
-      status: "available",
-      location: "Dorm A",
-      description: "Still in great shape!",
-      saved: true,
-    },
-    {
-      id: 2,
-      name: "Textbook",
-      image: "https://via.placeholder.com/100",
-      condition: "new",
-      status: "available",
-      location: "Library",
-      description: "Barely used. Required for CS101.",
-      saved: true,
-    },
-    {
-      id: 3,
-      name: "Calculator",
-      image: "https://via.placeholder.com/100",
-      condition: "new",
-      status: "available",
-      location: "Student center",
-      description: "New, good for calculus 2",
-      saved: true,
-    },
-  ]);
-// Dummy state hooks for filters
-const [housing, setHousing] = useState("");
-const [condition, setCondition] = useState("");
-const [status, setStatus] = useState("");
-const [category, setCategory] = useState("");
-const [searchTerm, setSearchTerm] = useState("");
-const [sortBy, setSortBy] = useState("");
-const [savedItemsOnly, setSavedItemsOnly] = useState(false);
+  const router = useRouter();
+  const [filteredItems, setFilteredItems] = useState<Item[]>([]);
+  const [housing, setHousing] = useState("");
+  const [condition, setCondition] = useState("");
+  const [status, setStatus] = useState("");
+  const [category, setCategory] = useState("");
+  const [distance, setDistance] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("");
+  const [savedItemsOnly, setSavedItemsOnly] = useState(false);
 
-const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  setSearchTerm(e.target.value);
-};
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+      return;
+    }
 
-const handleSavedItemsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  setSavedItemsOnly(e.target.checked);
-};
+    const fetchItems = async () => {
+      try {
+        const res = await fetch('http://localhost:3000/api/items', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
 
-const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  setSortBy(e.target.value);
-};
+        if (!res.ok) {
+          throw new Error('Failed to fetch items');
+        }
 
-let user = {
-  id: '#123456778',
-  name: 'bob',
-  join_date: '12/12/2025',
-  college: 'UGA',
-  savedItems: [filteredItems[0], filteredItems[1], filteredItems[2]]
-};
-  // Dummy save handler
-  const handleSaveItem = (id:number) => {
+        const data = await res.json();
+        setFilteredItems(data.items);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+      fetchItems();
+    }, [router]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSavedItemsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSavedItemsOnly(e.target.checked);
+  };
+
+  const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortBy(e.target.value);
+  };
+  
+  const handleSaveItem = (id: string) => {
     setFilteredItems((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, saved: !item.saved } : item
+        item._id === id ? { ...item, saved: !item.saved } : item
       )
     );
   };
-  // Dummy handlers
-const handleFilterChange = (
-  e: React.ChangeEvent<HTMLSelectElement>,
-  setter: React.Dispatch<React.SetStateAction<string>>
-) => {
-  setter(e.target.value);
-};
+
+  const handleFilterChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    setter: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    setter(e.target.value);
+  };
+
   return (
     <section className="m-[5%]">
       <div className="flex">
@@ -156,12 +145,28 @@ const handleFilterChange = (
             </select>
           </div>
 
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Distance</label>
+            <select
+              value={distance}
+              onChange={(e) => handleFilterChange(e, setDistance)}
+              className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
+            >
+              <option value="" disabled hidden>Distance</option>
+              <option value="5">5 miles</option>
+              <option value="10">10 miles</option>
+              <option value="20">20 miles</option>
+              <option value="50">50 miles</option>
+            </select>
+          </div>
+
           <button
             onClick={() => {
             setHousing("");
             setCondition("");
             setStatus("");
             setCategory("");
+            setDistance("");
             setSearchTerm("");
             setSortBy("");
             setSavedItemsOnly(false);
@@ -230,8 +235,8 @@ const handleFilterChange = (
         <div className="flex items-center justify-between w-1/4 ml-4">
           <p className="text-sm text-gray-700 flex-1">{item.description}</p>
           <button
-            className={`hover:text-green-700 ${item.saved ? "text-red-500":"text-green-500"}`}
-            onClick={() => handleSaveItem(item.id)}
+          className={`hover:text-green-700 ${item.saved ? "text-red-500":"text-green-500"}`}
+            onClick={() => handleSaveItem(item._id)}
           >
             <i className={item.saved ? "fas fa-minus" : "fas fa-plus"}></i>
           </button>
@@ -242,5 +247,5 @@ const handleFilterChange = (
         </div>
       </div>
     </section>
-);
+  );
 }
