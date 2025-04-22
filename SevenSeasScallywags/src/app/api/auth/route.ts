@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
           JWT_SECRET,
           { expiresIn: '7d' }
         );
-
+        global.isLoggedIn = true;
         return NextResponse.json({ message: 'Login successful', token }, { status: 200 });
       } else {
         return NextResponse.json({ message: 'Invalid password' }, { status: 401 });

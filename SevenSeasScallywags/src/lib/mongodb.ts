@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { MongoClient } from 'mongodb';
 
 const MONGODB_URI = process.env.MONGODB_URI
 //const MONGODB_URI = 'mongodb+srv://user:password_1234@cluster0.xt7epl2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';

@@ -15,17 +15,27 @@ interface Item {
   saved: boolean;
 }
 
+interface FormDataType {
+  name: string;
+  category: string;
+  condition: string;
+  status: string;
+  location: string;
+  description: string;
+  image: File | string | null;
+}
+
 export default function Profile() {
   connectMongoDB();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormDataType>({
     name: '',
     category: '',
     condition: '',
     status: '',
     location: '',
     description: '',
-    image: '',
+    image: null,
   });
 
   const handleChange = (e) => {
@@ -86,19 +96,46 @@ export default function Profile() {
     items: [filteredItems[0], filteredItems[1], filteredItems[2]]
   };
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Submitted Item:", formData);
+  const handleSubmit = async (e: React.FormEvent) => {    e.preventDefault();
+
+    const dataToSend = {
+      ...formData,
+      image:
+      formData.image instanceof File
+        ? formData.image.name
+        : formData.image ?? '', // If null, default to empty string
+    };
+  
+    try {
+      const res = await fetch('/api/items', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend),
+      });
+  
+      if (res.status === 201) {
+        const data = await res.json();
+        alert("Item added successfully!");
+      } else if (res.status === 409) {
+        alert("Item already exists!");
+      } else {
+        alert("Something went wrong.");
+      }
+    } catch (err) {
+      console.error("Error submitting item:", err);
+      alert("Submission failed.");
+    }
   
     setFormData({
       name: '',
       category: '',
       condition: '',
       status: '',
-      pickup: '',
       location: '',
       description: '',
-      image: null,
+      image: '',
     });
   
     // Clear file input manually
