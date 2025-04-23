@@ -81,7 +81,6 @@ export default function Profile() {
 
     if (searchTerm) {
       results = results.filter((item) => {
-        // Check if any field contains the search term (case insensitive)
         const searchFields = Object.values(item).map((field) => field.toString().toLowerCase());
         return searchFields.some((field) => field.includes(searchTerm.toLowerCase()));
       });
@@ -239,46 +238,41 @@ export default function Profile() {
           </div>
 
           {/* Item List */}
-          <div>
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredItems.length > 0 ? (
               filteredItems.map((item) => (
                 <div
                   key={item._id}
-                  className="flex items-center bg-white p-4 mb-4 rounded-lg shadow-lg"
+                  className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col justify-between min-h-[400px]"
                 >
-                  <div className="flex-shrink-0 w-1/5 mr-4">
+                  <div>
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-full h-auto rounded-lg max-h-[150px] max-w-[150px]"
+                      className="w-full h-[200px] object-cover"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = "/images/place_holder.jpg";
                       }}
                     />
-                    <h3 className="mt-2 text-lg font-semibold text-black">{item.name}</h3>
                   </div>
-                  <div className="flex-1 text-center">
-                  <div className="flex-1 text-center">
-                    <div className="text-m font-medium text-gray-700">
+                  <div className="p-4 flex flex-col justify-end flex-1">
+                    <h3 className="text-lg font-semibold text-black mb-2">{item.name}</h3>
+                    <p className="text-gray-700 mb-2">{item.description}</p>
+                    <div className="text-sm text-gray-700 space-y-1 mb-3">
                       <div>Condition: {item.condition}</div>
                       <div>Status: {item.status}</div>
                       <div>Location: {item.location}</div>
                       <div>College: {item.college || "N/A"}</div>
                     </div>
-                  </div>
-
-                  </div>
-                  <div className="flex items-center justify-between w-1/4 ml-4">
-                    <p className="text-m text-gray-700 flex-1">
-                      {item.description}
-                    </p>
-                    <button
-                      className={`hover:text-green-700 ${item.saved ? "text-red-500" : "text-green-500"}`}
-                      onClick={() => handleSaveItem(item._id)}
-                    >
-                      <i className={item.saved ? "fas fa-minus" : "fas fa-plus"}></i>
-                    </button>
+                    <div className="flex justify-end">
+                      <button
+                        className={`hover:text-green-700 ${item.saved ? "text-red-500" : "text-green-500"}`}
+                        onClick={() => handleSaveItem(item._id)}
+                      >
+                        <i className={item.saved ? "fas fa-minus" : "fas fa-plus"}></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))
@@ -286,6 +280,10 @@ export default function Profile() {
               <p>No items found.</p>
             )}
           </div>
+
+
+
+
         </div>
       </div>
     </section>

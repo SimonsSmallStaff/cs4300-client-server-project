@@ -9,6 +9,7 @@ interface IItem extends Document {
   description: string;
   owner: string;
   college: string;
+  category: string;
 }
 
 const itemSchema = new Schema<IItem>({
@@ -40,6 +41,10 @@ const itemSchema = new Schema<IItem>({
     required: true,
   },
   college: {
+    type: String,
+    required: true,
+  },
+  category: {
     type: String,
     required: true,
   }
