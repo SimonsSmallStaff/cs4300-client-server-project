@@ -249,7 +249,7 @@ export default function Profile() {
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-full h-[200px] object-cover"
+                      className="w-[200px] h-full object-cover mx-auto"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = "/images/place_holder.jpg";
