@@ -40,10 +40,38 @@ export default function LoginPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-      <input {...register('username')} placeholder="Username" className="border p-2" />
-      <input {...register('password')} type="password" placeholder="Password" className="border p-2" />
-      <button type="submit" className="bg-blue-500 text-white p-2">Login / Register</button>
-    </form>
+    <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg space-y-6 mt-15 text-black">
+  <h2 className="text-2xl font-semibold text-center text-gray-700">Login / Register</h2>
+
+  <div>
+    <label htmlFor="username" className="block text-gray-600 font-medium">Username</label>
+    <input
+      id="username"
+      {...register('username')}
+      placeholder="Enter your username"
+      className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition duration-300"
+    />
+  </div>
+
+  <div>
+    <label htmlFor="password" className="block text-gray-600 font-medium">Password</label>
+    <input
+      id="password"
+      {...register('password')}
+      type="password"
+      placeholder="Enter your password"
+      className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition duration-300"
+    />
+  </div>
+
+  <button
+    type="submit"
+    className="w-full py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 focus:ring-2 focus:ring-yellow-500 transition duration-200"
+  >
+    Login / Register
+  </button>
+</form>
+
+
   );
 }

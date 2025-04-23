@@ -22,6 +22,7 @@ export async function POST(request: NextRequest) {
         const location = formData.get('location')?.toString();
         const description = formData.get('description')?.toString();
         const image = 'path/to/store/image';
+        const college = formData.get('college')?.toString();
 
         await connectMongoDB();
         await Item.create({
@@ -31,7 +32,8 @@ export async function POST(request: NextRequest) {
             status,
             location,
             description,
-            image: image 
+            image: image,
+            college,
         });
 
         return NextResponse.json({ message: 'Item added successfully' }, { status: 201 });

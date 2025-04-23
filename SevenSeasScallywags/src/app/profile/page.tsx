@@ -27,6 +27,7 @@ export default function Profile() {
     location: '',
     description: '',
     image: '',
+    college: '',
   });
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -51,7 +52,8 @@ export default function Profile() {
         }
 
         const data = await res.json();
-        setFilteredItems(data.items);
+        // Only filter out saved items here
+        setFilteredItems(data.items.filter((item: Item) => item.saved));
       } catch (err) {
         console.error(err);
       }
@@ -79,11 +81,11 @@ export default function Profile() {
     }
   };
 
-  const handleSaveItem = (id: string) => {
+  const handleRemoveSavedItem = (id: string) => {
     setFilteredItems((prev) =>
       prev.map((item) =>
-        item._id === id ? { ...item, saved: !item.saved } : item
-      )
+        item._id === id ? { ...item, saved: false } : item
+      ).filter(item => item.saved) // Filter out removed items
     );
   };
 
@@ -113,6 +115,7 @@ export default function Profile() {
       location: '',
       description: '',
       image: '',
+      college: '', // Reset college
     });
 
     if (fileInputRef.current) {
@@ -122,18 +125,7 @@ export default function Profile() {
 
   return (
     <section className="p-4">
-      <div className="profileInfo mx-auto text-center p-4 rounded-lg mt-4 w-[40%] bg-gray-300 text-black">
-        <p>User ID: #123456778</p>
-        <p>Username: bob</p>
-        <p>Date Joined: 12/12/2025</p>
-        <p>User College: UGA</p>
-      </div>
-
-      <div className="App text-center p-4">
-        <h1>Search Colleges</h1>
-        <CollegeSearchDropdown apiKey="QR29qgsZRha4UVV0LciyIXXzXin6aYldRs6U33P4" />
-      </div>
-
+      <p></p>
       <div className="flex flex-col md:flex-row gap-8 justify-center mt-10">
         <div className="form md-w-md">
           <form className="bg-white shadow-md rounded-xl p-6 space-y-4 text-black" onSubmit={handleSubmit}>
@@ -212,6 +204,16 @@ export default function Profile() {
             </div>
 
             <div>
+              <label className="block font-medium text-gray-700">College</label>
+              <CollegeSearchDropdown
+                apiKey="QR29qgsZRha4UVV0LciyIXXzXin6aYldRs6U33P4"
+                onSelectCollege={(selectedCollege: string) => {
+                  setFormData((prev) => ({ ...prev, college: selectedCollege }));
+                }}
+              />
+            </div>
+
+            <div>
               <label className="block font-medium text-gray-700">Description</label>
               <textarea
                 name="description"
@@ -252,42 +254,41 @@ export default function Profile() {
             placeholder="Search items..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 opacity-50 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-white text-black mb-6"
+            className=" bg-white w-full px-4 py-2 border border-gray-300 opacity-50 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-white text-black mb-6"
           />
 
           <div className="userItems w-full max-w-xl text-center bg-white rounded-lg p-2">
             {filteredItems.length > 0 ? (
-              filteredItems.map((item, index) => (
-                <div key={index} className="flex items-center bg-white p-4 mb-4 rounded-lg shadow-lg">
-        <div className="flex-shrink-0 w-1/5 mr-4">
-          <img src={item.image} alt={item.name} className="w-full h-auto rounded-lg" />
-          <h3 className="mt-2 text-lg font-semibold">{item.name}</h3>
-        </div>
+              filteredItems.map((item) => (
+                <div key={item._id} className="flex items-center bg-white p-4 mb-4 rounded-lg shadow-lg">
+                  <div className="flex-shrink-0 w-1/5 mr-4">
+                    <img src={item.image} alt={item.name} className="w-full h-auto rounded-lg" />
+                    <h3 className="mt-2 text-lg font-semibold">{item.name}</h3>
+                  </div>
 
-        <div className="flex-1 text-center">
-          <p className="text-sm font-medium text-gray-700">
-            <span className="mr-2">Condition: {item.condition}</span>
-            <span className="mr-2">Status: {item.status}</span>
-            <span className="mr-2">Location: {item.location}</span>
-          </p>
-        </div>
+                  <div className="flex-1 text-center">
+                    <p className="text-sm font-medium text-gray-700">
+                      <span className="mr-2">Condition: {item.condition}</span>
+                      <span className="mr-2">Status: {item.status}</span>
+                      <span className="mr-2">Location: {item.location}</span>
+                    </p>
+                  </div>
 
-        <div className="flex items-center justify-between w-1/4 ml-4">
-          <p className="text-sm text-gray-700 flex-1">{item.description}</p>
-          <button
-            className={`hover:text-green-700 ${item.saved ? "text-red-500":"text-green-500"}`} // Conditional colors
-            onClick={() => handleSaveItem(item._id)}
-          >
-            <i className={item.saved ? "fas fa-minus" : "fas fa-plus"}></i> {/* Conditional icon */}
-          </button>
-        </div>
-      </div>
-    ))
-  ) : (
-    <p className="text-gray-400 italic">No matching items found.</p>
-  )}
-</div>
-
+                  <div className="flex items-center justify-between w-1/4 ml-4">
+                    <p className="text-sm text-gray-700 flex-1">{item.description}</p>
+                    <button
+                      className="text-red-500 hover:text-black"
+                      onClick={() => handleRemoveSavedItem(item._id)}
+                    >
+                      <i className="fas fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-400 italic">No saved items.</p>
+            )}
+          </div>
         </div>
       </div>
     </section>
