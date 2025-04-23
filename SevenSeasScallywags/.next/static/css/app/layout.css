@@ -123,7 +123,6 @@
     --font-weight-bold: 700;
     --radius-lg: 0.5rem;
     --radius-xl: 0.75rem;
-    --radius-2xl: 1rem;
     --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
@@ -346,9 +345,6 @@
       max-width: 96rem;
     }
   }
-  .m-\[5\%\] {
-    margin: 5%;
-  }
   .mx-auto {
     margin-inline: auto;
   }
@@ -457,9 +453,6 @@
   .max-w-xl {
     max-width: var(--container-xl);
   }
-  .min-w-\[150px\] {
-    min-width: 150px;
-  }
   .min-w-\[200px\] {
     min-width: 200px;
   }
@@ -532,9 +525,6 @@
   .rounded {
     border-radius: 0.25rem;
   }
-  .rounded-2xl {
-    border-radius: var(--radius-2xl);
-  }
   .rounded-lg {
     border-radius: var(--radius-lg);
   }
@@ -584,9 +574,6 @@
   }
   .bg-yellow-600 {
     background-color: var(--color-yellow-600);
-  }
-  .p-1 {
-    padding: calc(var(--spacing) * 1);
   }
   .p-2 {
     padding: calc(var(--spacing) * 2);
@@ -685,9 +672,6 @@
   .underline {
     text-decoration-line: underline;
   }
-  .opacity-50 {
-    opacity: 50%;
-  }
   .opacity-75 {
     opacity: 75%;
   }
@@ -701,10 +685,6 @@
   }
   .shadow-md {
     --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-  .shadow-sm {
-    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
   .outline {
@@ -875,11 +855,6 @@
   .focus\:ring-blue-500 {
     &:focus {
       --tw-ring-color: var(--color-blue-500);
-    }
-  }
-  .focus\:ring-white {
-    &:focus {
-      --tw-ring-color: var(--color-white);
     }
   }
   .focus\:ring-yellow-500 {

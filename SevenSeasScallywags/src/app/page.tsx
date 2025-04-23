@@ -1,4 +1,3 @@
-import connectMongoDB from "../../config/mongodb";
 import React from "react";
 
 let user = {

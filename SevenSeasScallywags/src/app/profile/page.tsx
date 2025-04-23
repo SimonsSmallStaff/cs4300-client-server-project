@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import connectMongoDB from "../../../config/mongodb";
 import CollegeSearchDropdown from "../../components/CollegeSearchDropdown.jsx";
+import { jwtDecode } from 'jwt-decode';
 
 interface Item {
   _id: string;
@@ -13,10 +14,12 @@ interface Item {
   status: string;
   location: string;
   description: string;
-  saved: boolean;
+  college: string;
+  owner: string;
 }
 
 export default function Profile() {
+  
   connectMongoDB();
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -28,6 +31,7 @@ export default function Profile() {
     description: '',
     image: '',
     college: '',
+    owner: '',
   });
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,10 +54,10 @@ export default function Profile() {
         if (!res.ok) {
           throw new Error('Failed to fetch items');
         }
-
+        let user= 'tim';
         const data = await res.json();
-        // Only filter out saved items here
-        setFilteredItems(data.items.filter((item: Item) => item.saved));
+        
+        setFilteredItems(data.items.filter((item: Item) => item.owner === user));
       } catch (err) {
         console.error(err);
       }
@@ -81,32 +85,65 @@ export default function Profile() {
     }
   };
 
-  const handleRemoveSavedItem = (id: string) => {
-    setFilteredItems((prev) =>
-      prev.map((item) =>
-        item._id === id ? { ...item, saved: false } : item
-      ).filter(item => item.saved) // Filter out removed items
-    );
+  const handleRemoveItem = async (id: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+  
+      const res = await fetch(`http://localhost:3000/api/items/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+  
+      if (!res.ok) {
+        throw new Error('Failed to delete item');
+      }
+  
+      setFilteredItems((prevItems) => prevItems.filter((item) => item._id !== id));
+    } catch (err) {
+      console.error('Error deleting item:', err);
+    }
   };
+  
+  interface TokenPayload {
+    username: string;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Submitted Item:", formData);
-
+  
     const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+  
+    const decoded = jwtDecode<TokenPayload>(token);
+    formData.owner = decoded.username;
+
     const formDataWithImage = new FormData();
+
+  
     for (let key in formData) {
       formDataWithImage.append(key, formData[key as keyof typeof formData]);
     }
-
+  
     const res = await fetch('http://localhost:3000/api/items', {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       body: formDataWithImage,
     });
-
+  
     if (!res.ok) throw new Error('Failed to submit item');
-
+  
     setFormData({
       name: '',
       category: '',
@@ -115,13 +152,42 @@ export default function Profile() {
       location: '',
       description: '',
       image: '',
-      college: '', // Reset college
+      college: '',
+      owner: '',
     });
-
+  
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+    const fetchItems = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          router.push('/login');
+          return;
+        }
+  
+        const res = await fetch('http://localhost:3000/api/items', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+  
+        if (!res.ok) {
+          throw new Error('Failed to fetch items');
+        }
+  
+        let user = decoded.username;
+        const data = await res.json();
+        
+        setFilteredItems(data.items.filter((item: Item) => item.owner === user));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchItems();
   };
+  
+
+  
 
   return (
     <section className="p-4">
@@ -248,37 +314,40 @@ export default function Profile() {
           </form>
         </div>
 
-        <div className="md-w-xl flex flex-col items-center">
-          <input
-            type="text"
-            placeholder="Search items..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className=" bg-white w-full px-4 py-2 border border-gray-300 opacity-50 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-white text-black mb-6"
-          />
+        <div className="md-w-xl flex flex-col items-center text-black">
+       
 
           <div className="userItems w-full max-w-xl text-center bg-white rounded-lg p-2">
             {filteredItems.length > 0 ? (
               filteredItems.map((item) => (
                 <div key={item._id} className="flex items-center bg-white p-4 mb-4 rounded-lg shadow-lg">
                   <div className="flex-shrink-0 w-1/5 mr-4">
-                    <img src={item.image} alt={item.name} className="w-full h-auto rounded-lg" />
+                    <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    className="w-full h-auto rounded-lg"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = "/images/place_holder.jpg";
+                    }}
+                    />
                     <h3 className="mt-2 text-lg font-semibold">{item.name}</h3>
                   </div>
 
                   <div className="flex-1 text-center">
-                    <p className="text-sm font-medium text-gray-700">
-                      <span className="mr-2">Condition: {item.condition}</span>
-                      <span className="mr-2">Status: {item.status}</span>
-                      <span className="mr-2">Location: {item.location}</span>
-                    </p>
+                    <div className="text-sm font-medium text-gray-700">
+                      <div className="mr-2">Condition: {item.condition}</div>
+                      <div className="mr-2">Status: {item.status}</div>
+                      <div className="mr-2">Location: {item.location}</div>
+                      <div className="mr-2">College: {item.college}</div>
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between w-1/4 ml-4">
                     <p className="text-sm text-gray-700 flex-1">{item.description}</p>
                     <button
                       className="text-red-500 hover:text-black"
-                      onClick={() => handleRemoveSavedItem(item._id)}
+                      onClick={() => handleRemoveItem(item._id)}
                     >
                       <i className="fas fa-minus"></i>
                     </button>

@@ -7,7 +7,8 @@ interface IItem extends Document {
   status: string;
   location: string;
   description: string;
-  saved?: boolean;
+  owner: string;
+  college: string;
 }
 
 const itemSchema = new Schema<IItem>({
@@ -34,8 +35,13 @@ const itemSchema = new Schema<IItem>({
     type: String,
     required: true,
   },
-  saved: {
-    type: Boolean
+  owner: {
+    type: String,
+    required: true,
+  },
+  college: {
+    type: String,
+    required: true,
   }
 });
 
