@@ -159,9 +159,8 @@ export default function Profile() {
           <h3 className="font-bold text-lg mb-4">Filters</h3>
           {/* Filter Blocks */}
           {[ 
-            ["Housing", housing, setHousing, ["Dorm", "House", "Apartment", "Other"]], 
             ["Condition", condition, setCondition, ["New", "Used-good", "Used-fair"]],
-            ["Status", status, setStatus, ["Available", "Sold", "Pending", "Claimed"]],
+            ["Status", status, setStatus, ["Available", "Pending", "Claimed"]],
             ["Category", category, setCategory, ["Furniture", "Books", "Kitchen", "School Supplies", "Cleaning Supplies", "Other"]],
           ].map(([label, value, setter, options], i) => (
             <div className="mb-4" key={i}>
@@ -251,20 +250,27 @@ export default function Profile() {
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-full h-auto rounded-lg"
+                      className="w-full h-auto rounded-lg max-h-[150px] max-w-[150px]"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "/images/place_holder.jpg";
+                      }}
                     />
-                    <h3 className="mt-2 text-lg font-semibold">{item.name}</h3>
+                    <h3 className="mt-2 text-lg font-semibold text-black">{item.name}</h3>
                   </div>
                   <div className="flex-1 text-center">
-                    <p className="text-sm font-medium text-gray-700">
-                      <span className="mr-2">Condition: {item.condition}</span>
-                      <span className="mr-2">Status: {item.status}</span>
-                      <span className="mr-2">Location: {item.location}</span>
-                      <span className="mr-2">College: {item.college || "N/A"}</span>
-                    </p>
+                  <div className="flex-1 text-center">
+                    <div className="text-m font-medium text-gray-700">
+                      <div>Condition: {item.condition}</div>
+                      <div>Status: {item.status}</div>
+                      <div>Location: {item.location}</div>
+                      <div>College: {item.college || "N/A"}</div>
+                    </div>
+                  </div>
+
                   </div>
                   <div className="flex items-center justify-between w-1/4 ml-4">
-                    <p className="text-sm text-gray-700 flex-1">
+                    <p className="text-m text-gray-700 flex-1">
                       {item.description}
                     </p>
                     <button

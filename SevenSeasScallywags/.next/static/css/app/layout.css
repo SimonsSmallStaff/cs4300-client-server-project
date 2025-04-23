@@ -346,6 +346,9 @@
       max-width: 96rem;
     }
   }
+  .m-\[5\%\] {
+    margin: 5%;
+  }
   .mx-auto {
     margin-inline: auto;
   }
@@ -418,6 +421,9 @@
   .h-screen {
     height: 100vh;
   }
+  .max-h-\[150px\] {
+    max-height: 150px;
+  }
   .min-h-screen {
     min-height: 100vh;
   }
@@ -442,11 +448,17 @@
   .w-full {
     width: 100%;
   }
+  .max-w-\[150px\] {
+    max-width: 150px;
+  }
   .max-w-md {
     max-width: var(--container-md);
   }
   .max-w-xl {
     max-width: var(--container-xl);
+  }
+  .min-w-\[150px\] {
+    min-width: 150px;
   }
   .min-w-\[200px\] {
     min-width: 200px;
@@ -572,6 +584,9 @@
   }
   .bg-yellow-600 {
     background-color: var(--color-yellow-600);
+  }
+  .p-1 {
+    padding: calc(var(--spacing) * 1);
   }
   .p-2 {
     padding: calc(var(--spacing) * 2);
